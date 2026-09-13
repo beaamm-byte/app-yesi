@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#10b981">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="NutriYesi">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f331.png">
+    <title>NutriYesi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Nunito', sans-serif; 
+            background-color: #d1fae5; 
+            background-image: radial-gradient(#a7f3d0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .mobile-wrapper {
+            max-width: 414px;
+            margin: 0 auto;
+            background-color: #f8fafc;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+        }
+        @media (min-width: 640px) {
+            .mobile-wrapper {
+                height: 850px;
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+                border-radius: 3rem;
+                border: 12px solid #1e293b;
+                overflow: hidden;
+            }
+        }
+        @media (max-width: 639px) {
+            .mobile-wrapper {
+                height: 100vh;
+                width: 100vw;
+            }
+        }
+        
+        .mobile-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 90px; 
+        }
+        .mobile-content::-webkit-scrollbar { display: none; }
+        .mobile-content { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .day-btn {
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; transition: all 0.2s; color: #94a3b8; background-color: transparent;
+        }
+        .day-active { background-color: #10b981; color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+        
+        .meal-card { transition: transform 0.2s, box-shadow 0.2s; border: none; }
+        .meal-card:active { transform: scale(0.98); }
+        .meal-details { overflow: hidden; max-height: 0; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .meal-details.open { max-height: 1000px; }
+        
+        .gradient-header { background: linear-gradient(135deg, #34d399 0%, #10b981 100%); }
+        
+        .view-section { display: none; animation: fadeIn 0.3s ease; }
+        .view-active { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .shopping-item.checked { text-decoration: line-through; color: #94a3b8; }
+        .shopping-checkbox.checked { background-color: #10b981; border-color: #10b981; }
+    </style>
+</head>
+<body class="text-gray-800 sm:p-4">
+
+    <div class="mobile-wrapper">
+        
+        <!-- Header -->
+        <header class="gradient-header text-white p-5 pb-6 rounded-b-[2rem] shadow-lg relative z-20">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm mr-3">
+                        <i class="fas fa-seedling text-xl" id="header-icon"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-tight" id="header-title">NutriYesi</h1>
+                        <p class="text-xs text-white/80 font-semibold uppercase tracking-wider" id="header-subtitle">Plan Personalizado</p>
+                    </div>
+                </div>
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-emerald-500 font-bold text-lg shadow-inner">
+                    Y
+                </div>
+            </div>
+            
+            <!-- Compact Day Selector (Only visible in Hoy view) -->
+            <div class="flex justify-between px-1 transition-all duration-300" id="day-selector-container">
+                <button class="day-btn day-active" data-day="Lunes" onclick="selectDay(this)">L</button>
+                <button class="day-btn" data-day="Martes" onclick="selectDay(this)">M</button>
+                <button class="day-btn" data-day="Miercoles" onclick="selectDay(this)">X</button>
+                <button class="day-btn" data-day="Jueves" onclick="selectDay(this)">J</button>
+                <button class="day-btn" data-day="Viernes" onclick="selectDay(this)">V</button>
+                <button class="day-btn" data-day="Sabado" onclick="selectDay(this)">S</button>
+                <button class="day-btn" data-day="Domingo" onclick="selectDay(this)">D</button>
+            </div>
+        </header>
+
+        <div class="mobile-content bg-slate-50 relative">
+            
+            <!-- VIEW: HOY (DIET PLAN) -->
+            <div id="view-hoy" class="view-section view-active">
+                <div class="p-4 pb-0 flex justify-between items-end mt-2">
+                    <h2 id="current-day-label" class="text-xl font-bold text-gray-800">Menú del Lunes</h2>
+                    <span class="text-xs font-bold text-emerald-500 bg-emerald-100 px-2 py-1 rounded-md">5 comidas</span>
+                </div>
+                <main class="p-4 space-y-4" id="meal-container"></main>
+            </div>
+
+            <!-- VIEW: COMPRA (SHOPPING LIST) -->
+            <div id="view-compra" class="view-section">
+                <div class="p-5">
+                    <p class="text-gray-500 text-sm mb-4">Marca los ingredientes conforme los añadas al carrito.</p>
+                    <div id="shopping-list-container" class="space-y-4"></div>
+                    
+                    <button onclick="resetShoppingList()" class="mt-8 w-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-bold py-4 rounded-2xl shadow-sm border border-emerald-200 flex items-center justify-center active:scale-95 transition-all">
+                        <i class="fas fa-rotate-left mr-2"></i> Vaciar Carrito (Desmarcar Todo)
+                    </button>
+                </div>
+            </div>
+
+            <!-- VIEW: SALUD (HEALTH GUIDELINES) -->
+            <div id="view-salud" class="view-section">
+                <div class="p-5 space-y-5">
+                    
+                    <!-- WATER TRACKER -->
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="font-bold text-gray-800"><i class="fas fa-droplet text-blue-400 mr-2"></i> Hidratación</h3>
+                            <span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-md" id="water-count">0 / 8 vasos</span>
+                        </div>
+                        <div class="flex justify-between mt-4 px-1" id="water-tracker">
+                            <button onclick="toggleWater(0)" class="text-gray-200 text-3xl drop-shadow-sm transition-colors active:scale-90"><i class="fas fa-tint"></i></button>
+                            <button onclick="toggleWater(1)" class="text-gray-200 text-3xl drop-shadow-sm transition-colors active:scale-90"><i class="fas fa-tint"></i></button>
+                            <button onclick="toggleWater(2)" class="text-gray-200 text-3xl drop-shadow-sm transition-colors active:scale-90"><i class="fas fa-tint"></i></button>
+                            <button onclick="toggleWater(3)" class="text-gray-200 text-3xl drop-shadow-sm transition-colors active:scale-90"><i class="fas fa-tint"></i></button>
+                            <button onclick="toggleWater(4)" class="text-gray-200 text-3xl drop-shadow-sm transition-colors active:scale-90"><i class="fas fa-tint"></i></button>
+                            <button onclick="toggleWater(5)" class="text-gray-200 text-3xl drop-shadow-sm transition-colors active:scale-90"><i class="fas fa-tint"></i></button>
+                            <button onclick="toggleWater(6)" class="text-gray-200 text-3xl drop-shadow-sm transition-colors active:scale-90"><i class="fas fa-tint"></i></button>
+                            <button onclick="toggleWater(7)" class="text-gray-200 text-3xl drop-shadow-sm transition-colors active:scale-90"><i class="fas fa-tint"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- PROGRESS TRACKER -->
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-gray-800 mb-1"><i class="fas fa-weight-scale text-purple-400 mr-2"></i> Mi Progreso</h3>
+                            <p class="text-xs text-gray-500">Último registro: 68.5 kg</p>
+                        </div>
+                        <button class="bg-purple-100 text-purple-600 px-4 py-2 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-transform">
+                            + Añadir
+                        </button>
+                    </div>
+
+                    <!-- CALCIUM SOURCES -->
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-bone"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-800">Fuentes de Calcio</h3>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-3">Opciones sin lactosa recomendadas en tu plan:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md">Sardinas</span>
+                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md">Salmón</span>
+                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md">Mejillones / Gambas</span>
+                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md">Espinacas / Brócoli</span>
+                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-md">Almendras</span>
+                        </div>
+                    </div>
+
+                    <!-- SUPPLEMENTS -->
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-800">Suplementos</h3>
+                        </div>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li><i class="fas fa-check text-pink-400 mr-2"></i><b>Lactasa:</b> Útil si comes fuera y dudas si el plato lleva leche.</li>
+                            <li><i class="fas fa-check text-pink-400 mr-2"></i><b>Probióticos:</b> Ayudan a mejorar tu flora intestinal.</li>
+                        </ul>
+                    </div>
+
+                    <!-- EXISTING CARDS -->
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+                        <h3 class="font-bold text-gray-800 mb-3"><i class="fas fa-triangle-exclamation text-blue-400 mr-2"></i> Lactosa</h3>
+                        <h4 class="font-bold text-xs text-red-500 uppercase mb-1"><i class="fas fa-times-circle"></i> Evitar</h4>
+                        <p class="text-xs text-gray-600 mb-3">Leche entera, nata, helados, procesados con suero.</p>
+                        <h4 class="font-bold text-xs text-emerald-500 uppercase mb-1"><i class="fas fa-check-circle"></i> Permitidos</h4>
+                        <p class="text-xs text-gray-600">Quesos muy curados (Manchego, Parmesano), bebidas vegetales.</p>
+                    </div>
+
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100">
+                        <h3 class="font-bold text-gray-800 mb-3"><i class="fas fa-fire text-orange-400 mr-2"></i> Grasa Corporal</h3>
+                        <p class="text-xs text-gray-600 mb-2"><b>Cocción:</b> Horno, vapor, hervido, plancha y papillote.</p>
+                        <p class="text-xs text-gray-600"><b>Ejercicio:</b> Resistencia 2-3 veces/semana, ideal en ayunas o 2-3h tras comer.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bg-white border-t border-gray-100 absolute bottom-0 w-full flex justify-around p-2 pb-safe z-20 shadow-[0_-5px_15px_rgba(0,0,0,0.03)] rounded-t-2xl" id="bottom-nav">
+            <button onclick="switchView('hoy', this)" class="nav-btn flex flex-col items-center p-2 text-emerald-500 transition-transform active:scale-95">
+                <div class="nav-icon-bg bg-emerald-50 p-2 rounded-xl mb-1">
+                    <i class="fas fa-calendar-day text-lg"></i>
+                </div>
+                <span class="text-[10px] font-bold">Hoy</span>
+            </button>
+            <button onclick="switchView('compra', this)" class="nav-btn flex flex-col items-center p-2 text-gray-400 hover:text-emerald-400 transition-all active:scale-95">
+                <div class="nav-icon-bg p-2 rounded-xl mb-1">
+                    <i class="fas fa-shopping-basket text-lg"></i>
+                </div>
+                <span class="text-[10px] font-bold">Compra</span>
+            </button>
+            <button onclick="switchView('salud', this)" class="nav-btn flex flex-col items-center p-2 text-gray-400 hover:text-emerald-400 transition-all active:scale-95">
+                <div class="nav-icon-bg p-2 rounded-xl mb-1">
+                    <i class="fas fa-heart text-lg"></i>
+                </div>
+                <span class="text-[10px] font-bold">Salud</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script>
+        // --- DATA ---
+        const planData = {
+            "Lunes": [
+                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada de pavo", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa: 150g", "Café: 50g", "Pan blanco: 40g", "Tomate crudo: 35g", "Pechuga pavo: 15g"], "recipe": "Tostar pan y montar."},
+                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo pavo y tomate", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan blanco: 40g", "Tomate: 45g", "Pechuga pavo: 15g"], "recipe": "Montar bocadillo."},
+                {"time": "13:30", "type": "Comida", "title": "Acelgas y Muslo pollo", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Acelgas: 150g, Patata: 100g", "Jamón serrano: 15g, Ajo: 5g", "Pollo (muslo): 270g", "Guisantes: 75g", "Aceite: 13g total", "Mandarina: 120g, Pan: 40g"], "recipe": "1. Cocer patatas y acelgas.\n2. Rehogar ajos, añadir acelgas, jamón y patatas.\n3. Dorar pollo, cocer con guisantes."},
+                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur con calcio: 125g", "Mandarina 60g, Plátano 30g, Fresa 40g", "Frutos secos: 15g"], "recipe": "Mezclar ingredientes."},
+                {"time": "21:30", "type": "Cena", "title": "Sopa quinoa y Tortilla", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Quinoa: 30g, Verduras sopa", "Huevo: 60g, Judía: 125g, Patata: 150g", "Jamón serrano: 30g", "Naranja: 180g, Pan: 40g"], "recipe": "1. Hervir sopa con quinoa.\n2. Cocer judías y patata.\n3. Cuajar tortilla con jamón."}
+            ],
+            "Martes": [
+                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada de pavo", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa: 150g", "Café: 50g", "Pan blanco: 40g", "Tomate crudo: 35g", "Pechuga pavo: 15g"], "recipe": "Tostar pan y montar."},
+                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo lomo embuchado", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan: 40g", "Lomo: 20g", "Tomate: 45g"], "recipe": "Montar bocadillo."},
+                {"time": "13:30", "type": "Comida", "title": "Garbanzos con gambas", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Garbanzos: 175g", "Calabacín: 100g", "Gamba: 50g", "Aceite: 5g", "Mandarina: 120g, Pan: 100g"], "recipe": "Saltear gambas, añadir calabacín, rehogar con garbanzos."},
+                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur calcio: 125g", "Fruta variada", "Frutos secos"], "recipe": "Mezclar."},
+                {"time": "21:30", "type": "Cena", "title": "Lubina al papillote", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Lubina: 250g", "Cebolla: 100g", "Limón: 45g", "Kiwi: 80g, Pan: 40g"], "recipe": "Hacer paquete con aluminio y cocinar en sartén 10 min."}
+            ],
+            "Miercoles": [
+                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada pavo", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa", "Pan 40g, Pavo 15g"], "recipe": "Tostar pan y montar."},
+                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo pavo", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Pavo 15g"], "recipe": "Montar bocadillo."},
+                {"time": "13:30", "type": "Comida", "title": "Menestra y Hamburguesa", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Judía verde, Zanahoria", "Hamburguesa ternera: 150g", "Calabacín, Cebolla", "Mandarina, Pan"], "recipe": "Cocer verduras. Saltear calabacín. Asar hamburguesa."},
+                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur", "Fruta y frutos secos"], "recipe": "Mezclar."},
+                {"time": "21:30", "type": "Cena", "title": "Sopa y Revuelto atún", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Quinoa, verduras sopa", "Huevo, Atún, Hummus", "Naranja, Pan"], "recipe": "Hacer sopa. Cuajar huevo con atún y hummus."}
+            ],
+            "Jueves": [
+                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada jamón/queso", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa", "Pan, Queso Burgos 0%, Jamón serrano"], "recipe": "Tostar y añadir ingredientes."},
+                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo jamón y rúcula", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Jamón 15g, Rúcula 10g"], "recipe": "Montar bocadillo."},
+                {"time": "13:30", "type": "Comida", "title": "Crema calabacín y Lomo", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Crema calabacín: 300g", "Lomo adobado: 150g", "Champiñones: 125g", "Mandarina, Pan"], "recipe": "Calentar crema. Asar lomo con champiñones."},
+                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur, Frutas, Frutos secos"], "recipe": "Mezclar."},
+                {"time": "21:30", "type": "Cena", "title": "Ensalada y Huevos", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Lechuga, Cebolla", "Huevo: 120g", "Patata, Pimiento verde", "Kiwi, Pan"], "recipe": "Ensalada. Saltear patata y pimiento, cuajar huevos encima."}
+            ],
+            "Viernes": [
+                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada jamón/queso", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa", "Pan, Queso Burgos, Jamón"], "recipe": "Tostar y añadir."},
+                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo lomo embuchado", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Lomo 20g, Tomate"], "recipe": "Montar bocadillo."},
+                {"time": "13:30", "type": "Comida", "title": "Patatas judías y Pavo", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Patata, Judía verde, Zanahoria", "Pechuga pavo: 125g", "Pimiento verde", "Mandarina, Pan"], "recipe": "Cocer verduras. Saltear pavo con pimiento."},
+                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur, Frutas, Frutos secos"], "recipe": "Mezclar."},
+                {"time": "21:30", "type": "Cena", "title": "Fajitas ternera guacamole", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Ternera: 100g, Fajita: 40g", "Pimientos, Cebolla", "Aguacate, Tomate, Lima", "Naranja, Pan"], "recipe": "Saltear ternera y pimientos. Hacer guacamole exprés."}
+            ],
+            "Sabado": [
+                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada pavo", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Café, leche sin lactosa", "Pan 40g, Pavo 15g"], "recipe": "Tostar pan."},
+                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo jamón y rúcula", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Jamón 15g, Rúcula"], "recipe": "Montar bocadillo."},
+                {"time": "13:30", "type": "Comida", "title": "Pollo al horno", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Pollo: 270g", "Patata, Tomate, Cebolla", "Mandarina, Pan"], "recipe": "Hornear pollo con hortalizas a 190ºC 1h 15m."},
+                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur, Frutas, Frutos secos"], "recipe": "Mezclar."},
+                {"time": "21:30", "type": "Cena", "title": "Pizza casera", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Harina 80g, Agua 60g", "Queso mozzarella, Tomate", "Atún, Pimientos, Cebolla", "Kiwi, Pan"], "recipe": "Hacer masa, cubrir ingredientes, hornear a 240ºC."}
+            ],
+            "Domingo": [
+                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada jamón", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa", "Pan, Jamón, Queso fresco"], "recipe": "Tostar."},
+                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo pavo", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Pavo 15g"], "recipe": "Montar."},
+                {"time": "13:30", "type": "Comida", "title": "Paella valenciana", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Arroz: 40g", "Conejo 75g, Pollo 75g", "Alcachofa, Judía verde", "Tomate triturado, Azafrán", "Mandarina, Pan"], "recipe": "Sofreír carne y verduras. Echar arroz, cocer 20 min."},
+                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur, Frutas, Frutos secos"], "recipe": "Mezclar."},
+                {"time": "21:30", "type": "Cena", "title": "Salmón con pisto", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Salmón: 170g", "Pimientos, Cebolla, Tomate", "Naranja, Pan"], "recipe": "Pochar verduras para pisto. Hacer salmón plancha."}
+            ]
+        };
+
+        const shoppingList = [
+            { category: "Cereales, azúcares y derivados", icon: "fa-wheat-awn", items: ["1090g Pan blanco", "60g Quinoa", "40g Fajita integral", "80g Harina de trigo", "1g Levadura", "40g Arroz blanco"] },
+            { category: "Hortalizas y verduras", icon: "fa-carrot", items: ["460g Tomate crudo", "150g Acelgas", "13g Ajo", "3g Perejil", "200g Zanahoria", "60g Puerro", "60g Apio", "400g Judía verde", "340g Calabacín", "335g Cebolla", "20g Rúcula", "300g Crema calabacín", "125g Champiñón", "80g Lechuga", "265g Pimiento verde", "190g Pimiento rojo", "165g Tomate triturado", "45g Alcachofa"] },
+            { category: "Carnes, pescados y huevos", icon: "fa-drumstick-bite", items: ["75g Pechuga de pavo", "105g Jamón serrano", "615g Pollo (muslo)", "240g Huevos", "40g Lomo embuchado", "50g Gamba", "250g Lubina", "150g Hamburguesa ternera", "65g Atún enlatado", "150g Lomo adobado", "125g Pavo (fresco)", "100g Ternera magra", "75g Conejo", "170g Salmón"] },
+            { category: "Frutas", icon: "fa-apple-whole", items: ["1260g Mandarina", "210g Plátano", "280g Fresa", "720g Naranja", "45g Limón", "240g Kiwi", "100g Aguacate", "45g Lima"] },
+            { category: "Lácteos", icon: "fa-cheese", items: ["875g Yogur con calcio", "600g Leche semi sin lactosa", "70g Queso Burgos 0%", "45g Queso mozzarella"] },
+            { category: "Aceites y grasas", icon: "fa-bottle-droplet", items: ["115g Aceite de oliva"] },
+            { category: "Legumbres y Frutos secos", icon: "fa-seedling", items: ["600g Patata", "75g Guisantes", "35g Nuez", "35g Pistacho", "35g Almendra", "175g Garbanzos", "15g Hummus"] },
+            { category: "Otros", icon: "fa-basket-shopping", items: ["200g Café", "60g Agua mineral", "Especias (Cilantro, Pimienta, Orégano, Pimentón)"] }
+        ];
+
+        // --- LOGIC ---
+        
+        function switchView(viewId, btnElement) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('view-active'));
+            document.getElementById('view-' + viewId).classList.add('view-active');
+            
+            // Reset nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-emerald-500');
+                btn.classList.add('text-gray-400');
+                btn.querySelector('.nav-icon-bg').classList.remove('bg-emerald-50');
+            });
+            
+            // Activate selected nav button
+            btnElement.classList.add('text-emerald-500');
+            btnElement.classList.remove('text-gray-400');
+            btnElement.querySelector('.nav-icon-bg').classList.add('bg-emerald-50');
+
+            // Header adjustments based on view
+            const headerIcon = document.getElementById('header-icon');
+            const headerTitle = document.getElementById('header-title');
+            const headerSubtitle = document.getElementById('header-subtitle');
+            const daySelector = document.getElementById('day-selector-container');
+
+            if (viewId === 'hoy') {
+                headerIcon.className = "fas fa-seedling text-xl";
+                headerTitle.innerText = "NutriYesi";
+                headerSubtitle.innerText = "Plan Personalizado";
+                daySelector.style.maxHeight = '50px';
+                daySelector.style.opacity = '1';
+                daySelector.style.marginTop = '0';
+            } else if (viewId === 'compra') {
+                headerIcon.className = "fas fa-shopping-cart text-xl";
+                headerTitle.innerText = "La Compra";
+                headerSubtitle.innerText = "Lista semanal completa";
+                daySelector.style.maxHeight = '0';
+                daySelector.style.opacity = '0';
+                daySelector.style.marginTop = '-20px';
+            } else if (viewId === 'salud') {
+                headerIcon.className = "fas fa-heartbeat text-xl";
+                headerTitle.innerText = "Mi Salud";
+                headerSubtitle.innerText = "Pautas Médicas";
+                daySelector.style.maxHeight = '0';
+                daySelector.style.opacity = '0';
+                daySelector.style.marginTop = '-20px';
+            }
+        }
+
+        function selectDay(btnElement) {
+            const day = btnElement.getAttribute('data-day');
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.classList.remove('day-active');
+                btn.style.color = '#94a3b8';
+                btn.classList.remove('text-white');
+            });
+            btnElement.classList.add('day-active');
+            btnElement.style.color = 'white';
+            
+            const labelDay = day === 'Miercoles' ? 'Miércoles' : (day === 'Sabado' ? 'Sábado' : day);
+            document.getElementById('current-day-label').innerText = 'Menú del ' + labelDay;
+            
+            renderMeals(day);
+        }
+
+        function toggleMeal(headerElement) {
+            const details = headerElement.nextElementSibling;
+            const icon = headerElement.querySelector('.chevron');
+            if (details.classList.contains('open')) {
+                details.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+                headerElement.parentElement.classList.remove('ring-2', 'ring-emerald-400');
+            } else {
+                details.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+                headerElement.parentElement.classList.add('ring-2', 'ring-emerald-400');
+            }
+        }
+
+        function toggleShoppingItem(element) {
+            const textSpan = element.querySelector('.shopping-item');
+            const checkbox = element.querySelector('.shopping-checkbox');
+            const icon = element.querySelector('i');
+            
+            textSpan.classList.toggle('checked');
+            checkbox.classList.toggle('checked');
+            
+            if (checkbox.classList.contains('checked')) {
+                icon.classList.remove('opacity-0');
+            } else {
+                icon.classList.add('opacity-0');
+            }
+        }
+
+        function loadWaterData() {
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('lastWaterDate');
+            
+            if (lastDate !== today) {
+                // Nuevo día: reset
+                localStorage.setItem('lastWaterDate', today);
+                localStorage.setItem('waterDrops', JSON.stringify([]));
+            } else {
+                // Mismo día: restaurar
+                const saved = JSON.parse(localStorage.getItem('waterDrops') || '[]');
+                const buttons = document.querySelectorAll('#water-tracker button');
+                saved.forEach(index => {
+                    if(buttons[index]) {
+                        buttons[index].classList.remove('text-gray-200');
+                        buttons[index].classList.add('text-blue-400');
+                    }
+                });
+                document.getElementById('water-count').innerText = saved.length + ' / 8 vasos';
+            }
+        }
+
+        function toggleWater(index) {
+            const btn = document.querySelectorAll('#water-tracker button')[index];
+            
+            if (btn.classList.contains('text-blue-400')) {
+                btn.classList.remove('text-blue-400');
+                btn.classList.add('text-gray-200');
+            } else {
+                btn.classList.remove('text-gray-200');
+                btn.classList.add('text-blue-400');
+            }
+            
+            // Guardar estado
+            const activeIndexes = [];
+            const buttons = document.querySelectorAll('#water-tracker button');
+            buttons.forEach((b, i) => {
+                if (b.classList.contains('text-blue-400')) activeIndexes.push(i);
+            });
+            
+            localStorage.setItem('waterDrops', JSON.stringify(activeIndexes));
+            localStorage.setItem('lastWaterDate', new Date().toDateString());
+            
+            document.getElementById('water-count').innerText = activeIndexes.length + ' / 8 vasos';
+        }
+
+        function resetShoppingList() {
+            document.querySelectorAll('#shopping-list-container .checked').forEach(el => {
+                el.classList.remove('checked');
+            });
+            document.querySelectorAll('#shopping-list-container i.fa-check').forEach(icon => {
+                icon.classList.add('opacity-0');
+            });
+        }
+
+        function renderMeals(day) {
+            const container = document.getElementById('meal-container');
+            container.innerHTML = '';
+            
+            const meals = planData[day];
+            meals.forEach(meal => {
+                const ingredientsList = meal.ingredients.map(ing => `
+                    <li class="flex items-start bg-white p-2 rounded-lg border border-gray-100 shadow-sm mb-2">
+                        <i class="fas fa-circle text-emerald-400 mt-1.5 mr-3 text-[8px]"></i>
+                        <span class="text-gray-700">${ing}</span>
+                    </li>`).join('');
+                
+                const mealHtml = `
+                    <div class="bg-white rounded-3xl shadow-sm meal-card border border-gray-100">
+                        <div class="p-5 flex items-center justify-between cursor-pointer" onclick="toggleMeal(this)">
+                            <div class="flex items-center flex-1">
+                                <div class="w-14 h-14 rounded-2xl ${meal.color} flex items-center justify-center text-2xl mr-4 shadow-sm">
+                                    <i class="fas ${meal.icon}"></i>
+                                </div>
+                                <div class="flex-1 pr-2">
+                                    <div class="flex items-center text-xs font-bold text-gray-400 mb-1">
+                                        <div class="bg-gray-100 px-2 py-1 rounded-md text-gray-600 mr-2">
+                                            <i class="far fa-clock mr-1"></i> ${meal.time}
+                                        </div>
+                                        <span class="uppercase tracking-widest text-emerald-600">${meal.type}</span>
+                                    </div>
+                                    <h3 class="font-bold text-gray-800 text-lg leading-tight">${meal.title}</h3>
+                                </div>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 transition-transform duration-300 chevron">
+                                <i class="fas fa-chevron-down text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="meal-details bg-slate-50 rounded-b-3xl">
+                            <div class="p-5 pt-2 border-t border-gray-100">
+                                <div class="mb-5">
+                                    <h4 class="font-bold text-sm text-gray-800 mb-3 flex items-center"><i class="fas fa-shopping-basket text-emerald-500 mr-2"></i> Ingredientes</h4>
+                                    <ul class="text-sm text-gray-600">${ingredientsList}</ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-gray-800 mb-3 flex items-center"><i class="fas fa-fire-burner text-emerald-500 mr-2"></i> Preparación</h4>
+                                    <div class="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-sm text-gray-600 whitespace-pre-line leading-relaxed">${meal.recipe}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += mealHtml;
+            });
+        }
+
+        function renderShoppingList() {
+            const container = document.getElementById('shopping-list-container');
+            let html = '';
+            
+            shoppingList.forEach(category => {
+                let itemsHtml = category.items.map(item => `
+                    <div class="flex items-center p-3 border-b border-gray-100 cursor-pointer active:bg-gray-50" onclick="toggleShoppingItem(this)">
+                        <div class="shopping-checkbox w-6 h-6 rounded-full border-2 border-gray-300 mr-4 flex items-center justify-center transition-colors">
+                            <i class="fas fa-check text-white text-xs opacity-0 transition-opacity"></i>
+                        </div>
+                        <span class="shopping-item text-gray-700 font-semibold text-sm transition-all">${item}</span>
+                    </div>
+                `).join('');
+                
+                html += `
+                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="bg-slate-50 px-5 py-3 border-b border-gray-100 flex items-center">
+                            <i class="fas ${category.icon} text-emerald-500 mr-3"></i>
+                            <h3 class="font-bold text-gray-800">${category.category}</h3>
+                        </div>
+                        <div class="px-2 pb-2">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Initialize App
+        function initCurrentDay() {
+            const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+            const todayIndex = new Date().getDay(); 
+            const todayName = daysOfWeek[todayIndex];
+            
+            const btn = document.querySelector(`button[data-day="${todayName}"]`);
+            if (btn) {
+                selectDay(btn);
+            } else {
+                renderMeals('Lunes');
+            }
+        }
+        initCurrentDay();
+        renderShoppingList();
+        loadWaterData();
+    </script>
+</body>
+</html>
