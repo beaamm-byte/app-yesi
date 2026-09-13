@@ -245,56 +245,495 @@
     <script>
         // --- DATA ---
         const planData = {
-            "Lunes": [
-                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada de pavo", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa: 150g", "Café: 50g", "Pan blanco: 40g", "Tomate crudo: 35g", "Pechuga pavo: 15g"], "recipe": "Tostar pan y montar."},
-                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo pavo y tomate", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan blanco: 40g", "Tomate: 45g", "Pechuga pavo: 15g"], "recipe": "Montar bocadillo."},
-                {"time": "13:30", "type": "Comida", "title": "Acelgas y Muslo pollo", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Acelgas: 150g, Patata: 100g", "Jamón serrano: 15g, Ajo: 5g", "Pollo (muslo): 270g", "Guisantes: 75g", "Aceite: 13g total", "Mandarina: 120g, Pan: 40g"], "recipe": "1. Cocer patatas y acelgas.\n2. Rehogar ajos, añadir acelgas, jamón y patatas.\n3. Dorar pollo, cocer con guisantes."},
-                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur con calcio: 125g", "Mandarina 60g, Plátano 30g, Fresa 40g", "Frutos secos: 15g"], "recipe": "Mezclar ingredientes."},
-                {"time": "21:30", "type": "Cena", "title": "Sopa quinoa y Tortilla", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Quinoa: 30g, Verduras sopa", "Huevo: 60g, Judía: 125g, Patata: 150g", "Jamón serrano: 30g", "Naranja: 180g, Pan: 40g"], "recipe": "1. Hervir sopa con quinoa.\n2. Cocer judías y patata.\n3. Cuajar tortilla con jamón."}
+    "Lunes": [
+        {
+            "time": "06:30",
+            "type": "Desayuno",
+            "title": "Café y Tostada de pavo",
+            "icon": "fa-mug-hot",
+            "color": "bg-orange-100 text-orange-500",
+            "ingredients": [
+                "Leche sin lactosa: 150g",
+                "Café: 50g",
+                "Pan blanco: 40g",
+                "Tomate crudo: 35g",
+                "Pechuga pavo: 15g"
             ],
-            "Martes": [
-                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada de pavo", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa: 150g", "Café: 50g", "Pan blanco: 40g", "Tomate crudo: 35g", "Pechuga pavo: 15g"], "recipe": "Tostar pan y montar."},
-                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo lomo embuchado", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan: 40g", "Lomo: 20g", "Tomate: 45g"], "recipe": "Montar bocadillo."},
-                {"time": "13:30", "type": "Comida", "title": "Garbanzos con gambas", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Garbanzos: 175g", "Calabacín: 100g", "Gamba: 50g", "Aceite: 5g", "Mandarina: 120g, Pan: 100g"], "recipe": "Saltear gambas, añadir calabacín, rehogar con garbanzos."},
-                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur calcio: 125g", "Fruta variada", "Frutos secos"], "recipe": "Mezclar."},
-                {"time": "21:30", "type": "Cena", "title": "Lubina al papillote", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Lubina: 250g", "Cebolla: 100g", "Limón: 45g", "Kiwi: 80g, Pan: 40g"], "recipe": "Hacer paquete con aluminio y cocinar en sartén 10 min."}
+            "recipe": "Tostar pan y montar."
+        },
+        {
+            "time": "10:30",
+            "type": "Almuerzo",
+            "title": "Bocadillo pavo y tomate",
+            "icon": "fa-bread-slice",
+            "color": "bg-yellow-100 text-yellow-600",
+            "ingredients": [
+                "Pan blanco: 40g",
+                "Tomate: 45g",
+                "Pechuga pavo: 15g"
             ],
-            "Miercoles": [
-                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada pavo", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa", "Pan 40g, Pavo 15g"], "recipe": "Tostar pan y montar."},
-                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo pavo", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Pavo 15g"], "recipe": "Montar bocadillo."},
-                {"time": "13:30", "type": "Comida", "title": "Menestra y Hamburguesa", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Judía verde, Zanahoria", "Hamburguesa ternera: 150g", "Calabacín, Cebolla", "Mandarina, Pan"], "recipe": "Cocer verduras. Saltear calabacín. Asar hamburguesa."},
-                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur", "Fruta y frutos secos"], "recipe": "Mezclar."},
-                {"time": "21:30", "type": "Cena", "title": "Sopa y Revuelto atún", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Quinoa, verduras sopa", "Huevo, Atún, Hummus", "Naranja, Pan"], "recipe": "Hacer sopa. Cuajar huevo con atún y hummus."}
+            "recipe": "Montar bocadillo."
+        },
+        {
+            "time": "13:30",
+            "type": "Comida",
+            "title": "Acelgas y Muslo pollo",
+            "icon": "fa-utensils",
+            "color": "bg-emerald-100 text-emerald-600",
+            "ingredients": [
+                "Acelgas: 150g, Patata: 100g",
+                "Jamón serrano: 15g, Ajo: 5g",
+                "Pollo (muslo): 270g",
+                "Guisantes: 75g",
+                "Aceite: 13g total",
+                "Mandarina: 120g, Pan: 40g"
             ],
-            "Jueves": [
-                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada jamón/queso", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa", "Pan, Queso Burgos 0%, Jamón serrano"], "recipe": "Tostar y añadir ingredientes."},
-                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo jamón y rúcula", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Jamón 15g, Rúcula 10g"], "recipe": "Montar bocadillo."},
-                {"time": "13:30", "type": "Comida", "title": "Crema calabacín y Lomo", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Crema calabacín: 300g", "Lomo adobado: 150g", "Champiñones: 125g", "Mandarina, Pan"], "recipe": "Calentar crema. Asar lomo con champiñones."},
-                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur, Frutas, Frutos secos"], "recipe": "Mezclar."},
-                {"time": "21:30", "type": "Cena", "title": "Ensalada y Huevos", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Lechuga, Cebolla", "Huevo: 120g", "Patata, Pimiento verde", "Kiwi, Pan"], "recipe": "Ensalada. Saltear patata y pimiento, cuajar huevos encima."}
+            "recipe": "1. Cocer patatas y acelgas.\n2. Rehogar ajos, añadir acelgas, jamón y patatas.\n3. Dorar pollo, cocer con guisantes."
+        },
+        {
+            "time": "17:30",
+            "type": "Merienda",
+            "title": "Bol de yogur",
+            "icon": "fa-apple-alt",
+            "color": "bg-purple-100 text-purple-500",
+            "ingredients": [
+                "Yogur con calcio nat. edulc.: 125g (1 unidad)",
+                "Mandarina: 60g, Plátano: 30g, Fresa: 40g",
+                "Nuez pelada: 5g (1 nuez)",
+                "Pistacho con cáscara: 5g",
+                "Almendra sin cáscara: 5g (5 almendras)"
             ],
-            "Viernes": [
-                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada jamón/queso", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa", "Pan, Queso Burgos, Jamón"], "recipe": "Tostar y añadir."},
-                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo lomo embuchado", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Lomo 20g, Tomate"], "recipe": "Montar bocadillo."},
-                {"time": "13:30", "type": "Comida", "title": "Patatas judías y Pavo", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Patata, Judía verde, Zanahoria", "Pechuga pavo: 125g", "Pimiento verde", "Mandarina, Pan"], "recipe": "Cocer verduras. Saltear pavo con pimiento."},
-                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur, Frutas, Frutos secos"], "recipe": "Mezclar."},
-                {"time": "21:30", "type": "Cena", "title": "Fajitas ternera guacamole", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Ternera: 100g, Fajita: 40g", "Pimientos, Cebolla", "Aguacate, Tomate, Lima", "Naranja, Pan"], "recipe": "Saltear ternera y pimientos. Hacer guacamole exprés."}
+            "recipe": "Mezclar ingredientes."
+        },
+        {
+            "time": "21:30",
+            "type": "Cena",
+            "title": "Sopa quinoa y Tortilla",
+            "icon": "fa-moon",
+            "color": "bg-indigo-100 text-indigo-500",
+            "ingredients": [
+                "Quinoa: 30g, Verduras sopa",
+                "Huevo: 60g, Judía: 125g, Patata: 150g",
+                "Jamón serrano: 30g",
+                "Naranja: 180g, Pan: 40g"
             ],
-            "Sabado": [
-                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada pavo", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Café, leche sin lactosa", "Pan 40g, Pavo 15g"], "recipe": "Tostar pan."},
-                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo jamón y rúcula", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Jamón 15g, Rúcula"], "recipe": "Montar bocadillo."},
-                {"time": "13:30", "type": "Comida", "title": "Pollo al horno", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Pollo: 270g", "Patata, Tomate, Cebolla", "Mandarina, Pan"], "recipe": "Hornear pollo con hortalizas a 190ºC 1h 15m."},
-                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur, Frutas, Frutos secos"], "recipe": "Mezclar."},
-                {"time": "21:30", "type": "Cena", "title": "Pizza casera", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Harina 80g, Agua 60g", "Queso mozzarella, Tomate", "Atún, Pimientos, Cebolla", "Kiwi, Pan"], "recipe": "Hacer masa, cubrir ingredientes, hornear a 240ºC."}
+            "recipe": "1. Hervir sopa con quinoa.\n2. Cocer judías y patata.\n3. Cuajar tortilla con jamón."
+        }
+    ],
+    "Martes": [
+        {
+            "time": "06:30",
+            "type": "Desayuno",
+            "title": "Café y Tostada de pavo",
+            "icon": "fa-mug-hot",
+            "color": "bg-orange-100 text-orange-500",
+            "ingredients": [
+                "Leche sin lactosa: 150g",
+                "Café: 50g",
+                "Pan blanco: 40g",
+                "Tomate crudo: 35g",
+                "Pechuga pavo: 15g"
             ],
-            "Domingo": [
-                {"time": "06:30", "type": "Desayuno", "title": "Café y Tostada jamón", "icon": "fa-mug-hot", "color": "bg-orange-100 text-orange-500", "ingredients": ["Leche sin lactosa", "Pan, Jamón, Queso fresco"], "recipe": "Tostar."},
-                {"time": "10:30", "type": "Almuerzo", "title": "Bocadillo pavo", "icon": "fa-bread-slice", "color": "bg-yellow-100 text-yellow-600", "ingredients": ["Pan 40g, Pavo 15g"], "recipe": "Montar."},
-                {"time": "13:30", "type": "Comida", "title": "Paella valenciana", "icon": "fa-utensils", "color": "bg-emerald-100 text-emerald-600", "ingredients": ["Arroz: 40g", "Conejo 75g, Pollo 75g", "Alcachofa, Judía verde", "Tomate triturado, Azafrán", "Mandarina, Pan"], "recipe": "Sofreír carne y verduras. Echar arroz, cocer 20 min."},
-                {"time": "17:30", "type": "Merienda", "title": "Bol de yogur", "icon": "fa-apple-alt", "color": "bg-purple-100 text-purple-500", "ingredients": ["Yogur, Frutas, Frutos secos"], "recipe": "Mezclar."},
-                {"time": "21:30", "type": "Cena", "title": "Salmón con pisto", "icon": "fa-moon", "color": "bg-indigo-100 text-indigo-500", "ingredients": ["Salmón: 170g", "Pimientos, Cebolla, Tomate", "Naranja, Pan"], "recipe": "Pochar verduras para pisto. Hacer salmón plancha."}
-            ]
-        };
+            "recipe": "Tostar pan y montar."
+        },
+        {
+            "time": "10:30",
+            "type": "Almuerzo",
+            "title": "Bocadillo lomo embuchado",
+            "icon": "fa-bread-slice",
+            "color": "bg-yellow-100 text-yellow-600",
+            "ingredients": [
+                "Pan: 40g",
+                "Lomo: 20g",
+                "Tomate: 45g"
+            ],
+            "recipe": "Montar bocadillo."
+        },
+        {
+            "time": "13:30",
+            "type": "Comida",
+            "title": "Garbanzos con gambas",
+            "icon": "fa-utensils",
+            "color": "bg-emerald-100 text-emerald-600",
+            "ingredients": [
+                "Garbanzos: 175g",
+                "Calabacín: 100g",
+                "Gamba: 50g",
+                "Aceite: 5g",
+                "Mandarina: 120g, Pan: 100g"
+            ],
+            "recipe": "Saltear gambas, añadir calabacín, rehogar con garbanzos."
+        },
+        {
+            "time": "17:30",
+            "type": "Merienda",
+            "title": "Bol de yogur",
+            "icon": "fa-apple-alt",
+            "color": "bg-purple-100 text-purple-500",
+            "ingredients": [
+                "Yogur con calcio nat. edulc.: 125g (1 unidad)",
+                "Mandarina: 60g, Plátano: 30g, Fresa: 40g",
+                "Nuez pelada: 5g (1 nuez)",
+                "Pistacho con cáscara: 5g",
+                "Almendra sin cáscara: 5g (5 almendras)"
+            ],
+            "recipe": "Mezclar."
+        },
+        {
+            "time": "21:30",
+            "type": "Cena",
+            "title": "Lubina al papillote",
+            "icon": "fa-moon",
+            "color": "bg-indigo-100 text-indigo-500",
+            "ingredients": [
+                "Lubina: 250g",
+                "Cebolla: 100g",
+                "Limón: 45g",
+                "Kiwi: 80g, Pan: 40g"
+            ],
+            "recipe": "Hacer paquete con aluminio y cocinar en sartén 10 min."
+        }
+    ],
+    "Miercoles": [
+        {
+            "time": "06:30",
+            "type": "Desayuno",
+            "title": "Café y Tostada pavo",
+            "icon": "fa-mug-hot",
+            "color": "bg-orange-100 text-orange-500",
+            "ingredients": [
+                "Leche sin lactosa",
+                "Pan 40g, Pavo 15g"
+            ],
+            "recipe": "Tostar pan y montar."
+        },
+        {
+            "time": "10:30",
+            "type": "Almuerzo",
+            "title": "Bocadillo pavo",
+            "icon": "fa-bread-slice",
+            "color": "bg-yellow-100 text-yellow-600",
+            "ingredients": [
+                "Pan 40g, Pavo 15g"
+            ],
+            "recipe": "Montar bocadillo."
+        },
+        {
+            "time": "13:30",
+            "type": "Comida",
+            "title": "Menestra y Hamburguesa",
+            "icon": "fa-utensils",
+            "color": "bg-emerald-100 text-emerald-600",
+            "ingredients": [
+                "Judía verde: 150g, Zanahoria: 80g",
+                "Hamburguesa ternera: 150g",
+                "Calabacín: 240g, Cebolla: 75g",
+                "Aceite: 13g total",
+                "Mandarina: 120g, Pan blanco: 40g"
+            ],
+            "recipe": "Cocer verduras. Saltear calabacín. Asar hamburguesa."
+        },
+        {
+            "time": "17:30",
+            "type": "Merienda",
+            "title": "Bol de yogur",
+            "icon": "fa-apple-alt",
+            "color": "bg-purple-100 text-purple-500",
+            "ingredients": [
+                "Yogur con calcio nat. edulc.: 125g (1 unidad)",
+                "Mandarina: 60g, Plátano: 30g, Fresa: 40g",
+                "Nuez pelada: 5g (1 nuez)",
+                "Pistacho con cáscara: 5g",
+                "Almendra sin cáscara: 5g (5 almendras)"
+            ],
+            "recipe": "Mezclar."
+        },
+        {
+            "time": "21:30",
+            "type": "Cena",
+            "title": "Sopa y Revuelto atún",
+            "icon": "fa-moon",
+            "color": "bg-indigo-100 text-indigo-500",
+            "ingredients": [
+                "Quinoa: 30g, Verduras para sopa",
+                "Huevo: 60g, Atún enlatado: 35g, Hummus: 15g",
+                "Naranja: 180g, Pan blanco: 40g"
+            ],
+            "recipe": "Hacer sopa. Cuajar huevo con atún y hummus."
+        }
+    ],
+    "Jueves": [
+        {
+            "time": "06:30",
+            "type": "Desayuno",
+            "title": "Café y Tostada jamón/queso",
+            "icon": "fa-mug-hot",
+            "color": "bg-orange-100 text-orange-500",
+            "ingredients": [
+                "Leche sin lactosa",
+                "Pan, Queso Burgos 0%, Jamón serrano"
+            ],
+            "recipe": "Tostar y añadir ingredientes."
+        },
+        {
+            "time": "10:30",
+            "type": "Almuerzo",
+            "title": "Bocadillo jamón y rúcula",
+            "icon": "fa-bread-slice",
+            "color": "bg-yellow-100 text-yellow-600",
+            "ingredients": [
+                "Pan 40g, Jamón 15g, Rúcula 10g"
+            ],
+            "recipe": "Montar bocadillo."
+        },
+        {
+            "time": "13:30",
+            "type": "Comida",
+            "title": "Crema calabacín y Lomo",
+            "icon": "fa-utensils",
+            "color": "bg-emerald-100 text-emerald-600",
+            "ingredients": [
+                "Crema calabacín: 300g",
+                "Lomo adobado: 150g",
+                "Champiñones: 125g",
+                "Mandarina, Pan"
+            ],
+            "recipe": "Calentar crema. Asar lomo con champiñones."
+        },
+        {
+            "time": "17:30",
+            "type": "Merienda",
+            "title": "Bol de yogur",
+            "icon": "fa-apple-alt",
+            "color": "bg-purple-100 text-purple-500",
+            "ingredients": [
+                "Yogur con calcio nat. edulc.: 125g (1 unidad)",
+                "Mandarina: 60g, Plátano: 30g, Fresa: 40g",
+                "Nuez pelada: 5g (1 nuez)",
+                "Pistacho con cáscara: 5g",
+                "Almendra sin cáscara: 5g (5 almendras)"
+            ],
+            "recipe": "Mezclar."
+        },
+        {
+            "time": "21:30",
+            "type": "Cena",
+            "title": "Ensalada y Huevos",
+            "icon": "fa-moon",
+            "color": "bg-indigo-100 text-indigo-500",
+            "ingredients": [
+                "Lechuga: 80g, Cebolla: 60g",
+                "Huevo: 120g (2 M)",
+                "Patata: 180g, Pimiento verde: 75g",
+                "Kiwi: 80g, Pan blanco: 40g"
+            ],
+            "recipe": "Ensalada. Saltear patata y pimiento, cuajar huevos encima."
+        }
+    ],
+    "Viernes": [
+        {
+            "time": "06:30",
+            "type": "Desayuno",
+            "title": "Café y Tostada jamón/queso",
+            "icon": "fa-mug-hot",
+            "color": "bg-orange-100 text-orange-500",
+            "ingredients": [
+                "Leche sin lactosa",
+                "Pan, Queso Burgos, Jamón"
+            ],
+            "recipe": "Tostar y añadir."
+        },
+        {
+            "time": "10:30",
+            "type": "Almuerzo",
+            "title": "Bocadillo lomo embuchado",
+            "icon": "fa-bread-slice",
+            "color": "bg-yellow-100 text-yellow-600",
+            "ingredients": [
+                "Pan 40g, Lomo 20g, Tomate"
+            ],
+            "recipe": "Montar bocadillo."
+        },
+        {
+            "time": "13:30",
+            "type": "Comida",
+            "title": "Patatas judías y Pavo",
+            "icon": "fa-utensils",
+            "color": "bg-emerald-100 text-emerald-600",
+            "ingredients": [
+                "Patata, Judía verde, Zanahoria",
+                "Pechuga pavo: 125g",
+                "Pimiento verde",
+                "Mandarina, Pan"
+            ],
+            "recipe": "Cocer verduras. Saltear pavo con pimiento."
+        },
+        {
+            "time": "17:30",
+            "type": "Merienda",
+            "title": "Bol de yogur",
+            "icon": "fa-apple-alt",
+            "color": "bg-purple-100 text-purple-500",
+            "ingredients": [
+                "Yogur con calcio nat. edulc.: 125g (1 unidad)",
+                "Mandarina: 60g, Plátano: 30g, Fresa: 40g",
+                "Nuez pelada: 5g (1 nuez)",
+                "Pistacho con cáscara: 5g",
+                "Almendra sin cáscara: 5g (5 almendras)"
+            ],
+            "recipe": "Mezclar."
+        },
+        {
+            "time": "21:30",
+            "type": "Cena",
+            "title": "Fajitas ternera guacamole",
+            "icon": "fa-moon",
+            "color": "bg-indigo-100 text-indigo-500",
+            "ingredients": [
+                "Ternera: 100g, Fajita integral: 40g",
+                "Pimiento rojo/verde: 80g, Cebolla: 50g",
+                "Aguacate: 100g, Tomate crudo: 75g, Lima: 45g",
+                "Naranja: 180g, Pan blanco: 40g"
+            ],
+            "recipe": "Saltear ternera y pimientos. Hacer guacamole exprés."
+        }
+    ],
+    "Sabado": [
+        {
+            "time": "06:30",
+            "type": "Desayuno",
+            "title": "Café y Tostada pavo",
+            "icon": "fa-mug-hot",
+            "color": "bg-orange-100 text-orange-500",
+            "ingredients": [
+                "Café, leche sin lactosa",
+                "Pan 40g, Pavo 15g"
+            ],
+            "recipe": "Tostar pan."
+        },
+        {
+            "time": "10:30",
+            "type": "Almuerzo",
+            "title": "Bocadillo jamón y rúcula",
+            "icon": "fa-bread-slice",
+            "color": "bg-yellow-100 text-yellow-600",
+            "ingredients": [
+                "Pan 40g, Jamón 15g, Rúcula"
+            ],
+            "recipe": "Montar bocadillo."
+        },
+        {
+            "time": "13:30",
+            "type": "Comida",
+            "title": "Pollo al horno",
+            "icon": "fa-utensils",
+            "color": "bg-emerald-100 text-emerald-600",
+            "ingredients": [
+                "Pollo: 270g",
+                "Patata, Tomate, Cebolla",
+                "Mandarina, Pan"
+            ],
+            "recipe": "Hornear pollo con hortalizas a 190ºC 1h 15m."
+        },
+        {
+            "time": "17:30",
+            "type": "Merienda",
+            "title": "Bol de yogur",
+            "icon": "fa-apple-alt",
+            "color": "bg-purple-100 text-purple-500",
+            "ingredients": [
+                "Yogur con calcio nat. edulc.: 125g (1 unidad)",
+                "Mandarina: 60g, Plátano: 30g, Fresa: 40g",
+                "Nuez pelada: 5g (1 nuez)",
+                "Pistacho con cáscara: 5g",
+                "Almendra sin cáscara: 5g (5 almendras)"
+            ],
+            "recipe": "Mezclar."
+        },
+        {
+            "time": "21:30",
+            "type": "Cena",
+            "title": "Pizza casera",
+            "icon": "fa-moon",
+            "color": "bg-indigo-100 text-indigo-500",
+            "ingredients": [
+                "Harina de trigo: 80g, Agua: 60g",
+                "Tomate triturado: 75g, Queso mozzarella: 45g",
+                "Atún: 30g, Pimiento rojo: 100g, Cebolla: 100g",
+                "Kiwi: 80g, Pan blanco: 40g"
+            ],
+            "recipe": "Hacer masa, cubrir ingredientes, hornear a 240ºC."
+        }
+    ],
+    "Domingo": [
+        {
+            "time": "06:30",
+            "type": "Desayuno",
+            "title": "Café y Tostada jamón",
+            "icon": "fa-mug-hot",
+            "color": "bg-orange-100 text-orange-500",
+            "ingredients": [
+                "Leche sin lactosa",
+                "Pan, Jamón, Queso fresco"
+            ],
+            "recipe": "Tostar."
+        },
+        {
+            "time": "10:30",
+            "type": "Almuerzo",
+            "title": "Bocadillo pavo",
+            "icon": "fa-bread-slice",
+            "color": "bg-yellow-100 text-yellow-600",
+            "ingredients": [
+                "Pan 40g, Pavo 15g"
+            ],
+            "recipe": "Montar."
+        },
+        {
+            "time": "13:30",
+            "type": "Comida",
+            "title": "Paella valenciana",
+            "icon": "fa-utensils",
+            "color": "bg-emerald-100 text-emerald-600",
+            "ingredients": [
+                "Arroz: 40g",
+                "Conejo: 75g, Pollo: 75g",
+                "Alcachofa: 45g, Judía verde: 25g",
+                "Tomate triturado: 30g",
+                "Mandarina: 120g, Pan blanco: 70g"
+            ],
+            "recipe": "Sofreír carne y verduras. Echar arroz, cocer 20 min."
+        },
+        {
+            "time": "17:30",
+            "type": "Merienda",
+            "title": "Bol de yogur",
+            "icon": "fa-apple-alt",
+            "color": "bg-purple-100 text-purple-500",
+            "ingredients": [
+                "Yogur con calcio nat. edulc.: 125g (1 unidad)",
+                "Mandarina: 60g, Plátano: 30g, Fresa: 40g",
+                "Nuez pelada: 5g (1 nuez)",
+                "Pistacho con cáscara: 5g",
+                "Almendra sin cáscara: 5g (5 almendras)"
+            ],
+            "recipe": "Mezclar."
+        },
+        {
+            "time": "21:30",
+            "type": "Cena",
+            "title": "Salmón con pisto",
+            "icon": "fa-moon",
+            "color": "bg-indigo-100 text-indigo-500",
+            "ingredients": [
+                "Salmón: 170g",
+                "Pimientos, Cebolla, Tomate",
+                "Naranja, Pan"
+            ],
+            "recipe": "Pochar verduras para pisto. Hacer salmón plancha."
+        }
+    ]
+};
 
         const shoppingList = [
             { category: "Cereales, azúcares y derivados", icon: "fa-wheat-awn", items: ["1090g Pan blanco", "60g Quinoa", "40g Fajita integral", "80g Harina de trigo", "1g Levadura", "40g Arroz blanco"] },
